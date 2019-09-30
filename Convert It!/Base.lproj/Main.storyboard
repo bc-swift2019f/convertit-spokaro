@@ -47,6 +47,9 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                <connections>
+                                    <action selector="UserTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="su9-J4-mhG"/>
+                                </connections>
                             </textField>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wy1-dY-AWN">
                                 <rect key="frame" x="16" y="193" width="343" height="216"/>
@@ -63,18 +66,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Py6-o9-Osx">
-                                <rect key="frame" x="16" y="61" width="32" height="29"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="32" id="DnX-qu-ptT"/>
-                                    <constraint firstAttribute="height" constant="28" id="eVl-IS-nV8"/>
-                                </constraints>
-                                <segments>
-                                    <segment title="+"/>
-                                    <segment title="-"/>
-                                </segments>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b4s-Xd-v3e">
                                 <rect key="frame" x="110.66666666666669" y="478" width="154" height="30"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -123,6 +114,21 @@
                                     <constraint firstAttribute="width" constant="283.67000000000002" id="wdJ-zf-qKK"/>
                                 </constraints>
                             </stackView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Py6-o9-Osx">
+                                <rect key="frame" x="16" y="60" width="32" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="32" id="DnX-qu-ptT"/>
+                                    <constraint firstAttribute="height" constant="28" id="eVl-IS-nV8"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="+"/>
+                                    <segment title="-"/>
+                                </segments>
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="signSegmentSelect:" destination="BYZ-38-t0r" eventType="valueChanged" id="Gvg-ry-wm0"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -159,6 +165,7 @@
                         <outlet property="formulaPicker" destination="wy1-dY-AWN" id="VGq-ZR-wb2"/>
                         <outlet property="fromUnitsLabel" destination="Vnj-CH-YNo" id="q6A-Gb-rgq"/>
                         <outlet property="resultsLabel" destination="w6k-0Y-yJ2" id="1Aa-UJ-IH0"/>
+                        <outlet property="signSegment" destination="Py6-o9-Osx" id="ia4-us-ShI"/>
                         <outlet property="userTextField" destination="38t-3m-jti" id="38h-d5-TvW"/>
                     </connections>
                 </viewController>
