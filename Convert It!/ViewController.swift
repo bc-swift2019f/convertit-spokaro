@@ -9,6 +9,11 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    struct Formula {
+        var convertionString: String
+        var formula: (Double) -> Double
+    }
 
     @IBOutlet weak var userTextField: UITextField!
     
@@ -22,8 +27,18 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var signSegment: UISegmentedControl!
     
-    var formulaArray = ["miles to kilometers", "kilometers to miles", "feet to meters", "yards to meters", "meters to feet", "meters to yards", "inches to cm", "cm to inches", "fahrenheit to celsius", "celsius to fahrenheit", "quarts to liters", "liters to quarts"]
-    
+    let formulasArray = [Formula(convertionString: "miles to kilometers", formula: {$0 / 0.62137}),
+                        Formula(convertionString: "kilometers to miles", formula: {$0 * 0.62137}),
+                        Formula(convertionString: "feet to meters", formula: {$0 / 3.2808}),
+                        Formula(convertionString: "yards to meters", formula: {$0 / 1.0936}),
+                        Formula(convertionString: "meters to feet", formula: {$0 * 3.2808}),
+                        Formula(convertionString: "meters to yards", formula: {$0 * 1.0936}),
+                        Formula(convertionString: "inches to cm", formula: {$0 / 0.3937}),
+                        Formula(convertionString: "cm to inches", formula: {$0 * 0.3937}),
+                        Formula(convertionString: "fahrenheit to celsiu", formula: {($0 - 32) * 5/9}),
+                        Formula(convertionString: "celsius to fahrenheit", formula: {($0 * ( 9/5)) + 32}),
+                        Formula(convertionString: "quarts to liters", formula: {$0 / 1.05669}),
+                        Formula(convertionString: "liters to quarts", formula: {$0 * 1.05669})]
     var fromUnits = ""
     var toUnits = ""
     var convertionString = ""
@@ -33,7 +48,12 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         formulaPicker.delegate = self
         formulaPicker.dataSource = self
-        convertionString = formulaArray[formulaPicker.selectedRow(inComponent: 0)]
+        convertionString = formulasArray[formulaPicker.selectedRow(inComponent: 0)].convertionString
+        let unitsArray = convertionString.components(separatedBy: " to ")
+        fromUnits = unitsArray[0]
+        fromUnitsLabel.text = fromUnits
+        toUnits = unitsArray[1]
+        userTextField.becomeFirstResponder()
         signSegment.isHidden = true
     }
 
@@ -46,37 +66,9 @@ class ViewController: UIViewController {
             return
             }
         
-        var outputValue = 0.0
+        let outputValue = formulasArray[formulaPicker.selectedRow(inComponent: 0)].formula(inputValue)
         
-            switch convertionString {
-            case "miles to kilometers":
-                outputValue = inputValue / 0.62137
-            case "kilometers to miles":
-                outputValue = inputValue * 0.62137
-            case "feet to meters":
-                outputValue = inputValue / 3.2808
-            case "yards to meters":
-                outputValue = inputValue / 1.0936
-            case "meters to feet":
-                outputValue = inputValue * 3.2808
-            case "meters to yards":
-                outputValue = inputValue * 1.0936
-            case "inches to cm":
-                outputValue = inputValue / 0.3937
-            case "cm to inches":
-                outputValue = inputValue * 0.3937
-            case "fahrenheit to celsius":
-                outputValue = (inputValue - 32) * 5/9
-            case "celsius to fahrenheit":
-                outputValue = (inputValue * ( 9/5)) + 32
-            case "quarts to liters":
-                outputValue = inputValue / 1.05669
-            case "liters to quarts":
-                outputValue = inputValue * 1.05669
-
-            default:
-                showAlert(title: "Unexpect error", message: "Contant developer for help." )
-            }
+        
         let formatString = (decimalSegment.selectedSegmentIndex < decimalSegment.numberOfSegments-1 ? "%.\(decimalSegment.selectedSegmentIndex+1)f" : "%f")
         
         let outputString = String(format: formatString, outputValue)
@@ -131,14 +123,14 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return formulaArray.count
+        return formulasArray.count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return formulaArray[row]
+        return formulasArray[row].convertionString
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        convertionString = formulaArray[row]
+        convertionString = formulasArray[row].convertionString
         
         if convertionString.lowercased().contains("celsius".lowercased()){
             signSegment.isHidden = false
@@ -147,7 +139,7 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
             userTextField.text = userTextField.text?.replacingOccurrences(of: "-", with: "")
             signSegment.selectedSegmentIndex = 0
         }
-        let unitsArray = formulaArray[row].components(separatedBy: " to ")
+        let unitsArray = formulasArray[row].convertionString.components(separatedBy: " to ")
         fromUnits = unitsArray[0]
         toUnits = unitsArray[1]
         fromUnitsLabel.text = fromUnits
