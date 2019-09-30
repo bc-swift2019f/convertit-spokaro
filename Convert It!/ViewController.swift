@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var formulaPicker: UIPickerView!
     
+    @IBOutlet weak var decimalSegment: UISegmentedControl!
     
     var formulaArray = ["miles to kilometers", "kilometers to miles", "feet to meters", "yards to meters", "meters to feet", "meters to yards" ]
     
@@ -27,14 +28,20 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
         formulaPicker.delegate = self
         formulaPicker.dataSource = self
+        convertionString = formulaArray[formulaPicker.selectedRow(inComponent: 0)]
     }
 
     func calculateConvertion() {
+ 
+        guard let inputValue = Double(userTextField.text!) else {
+            print("show alert here to say the value entered was not a number")
+            return
+        }
+        
         var outputValue = 0.0
-        if let inputValue = Double(userTextField.text!) {
+        
             switch convertionString {
             case "miles to kilometers":
                 outputValue = inputValue / 0.62137
@@ -51,19 +58,22 @@ class ViewController: UIViewController {
             default:
                 print("Show alert - For some reason we did not have a convertion string")
             }
-            resultsLabel.text = "\(inputValue) \(fromUnits) = \(outputValue) \(toUnits)"
-        }else {
-            print("show alert here to say the value entered was not a number")
-        }
+        let formatString = (decimalSegment.selectedSegmentIndex < decimalSegment.numberOfSegments-1 ? "%.\(decimalSegment.selectedSegmentIndex+1)f" : "%f")
         
-       
+        let outputString = String(format: formatString, outputValue)
+        resultsLabel.text = "\(inputValue) \(fromUnits) = \(outputValue) \(toUnits)"
+    }
+
+    @IBAction func decimalSelected(_ sender: UISegmentedControl) {
+        calculateConvertion()
     }
     
+        
     @IBAction func convertButtonPressed(_ sender: UIButton) {
+        calculateConvertion()
     }
     
 }
-
 extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
